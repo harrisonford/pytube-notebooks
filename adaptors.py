@@ -5,6 +5,10 @@ import json
 
 # create internal function that splits time into 'start' and 'end' times
 def _times(a_string, index):
+    # if None string return None
+    if not a_string:
+        return None
+
     # split string using re lib
     splits = re.split(r'[, :]', a_string)
 
@@ -33,7 +37,8 @@ def youtube2df(filepath):
 
     # compress into tuples of three, ignoring 4th
     # tuples = [index, time, transcript]
-    tps = [(lines[i], _times(lines[i + 1], 0), _times(lines[i + 1], 1), lines[i + 2]) for i in range(0, len(lines), 4)]
+    tps = [(lines[i], _times(lines[i + 1], 0), _times(lines[i + 1], 1), lines[i + 2]) for i in range(0, len(lines), 4)
+           if i + 2 < len(lines) and _times(lines[i + 1], 0)]
 
     # convert to dataframe
     _df = pd.DataFrame(tps, columns=['orig_index', 'start', 'end', 'transcript'])
